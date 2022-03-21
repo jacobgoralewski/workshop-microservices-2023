@@ -1,0 +1,8 @@
+
+test_key: LOL
+db:
+  username: postgres
+  password: postgres
+  port: 5432
+  host: 127.0.0.1
+  name: postgres
