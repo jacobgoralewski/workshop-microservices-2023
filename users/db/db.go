@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
-	"github.com/rs/zerolog/log"
 
+	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

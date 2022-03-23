@@ -3,13 +3,14 @@ module users
 go 1.17
 
 require (
-	github.com/jinzhu/gorm v1.9.16
-	github.com/rs/zerolog v1.26.1
-	gorm.io/driver/postgres v1.3.1
-	gorm.io/gorm v1.23.2
 	contracts v1.0.0
+	github.com/jinzhu/gorm v1.9.16
+	github.com/pkg/errors v0.9.1
+	github.com/rs/zerolog v1.26.1
 	github.com/spf13/viper v1.10.1
 	google.golang.org/grpc v1.45.0
+	gorm.io/driver/postgres v1.3.1
+	gorm.io/gorm v1.23.2
 )
 
 require (

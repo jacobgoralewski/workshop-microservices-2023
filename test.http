@@ -38,5 +38,5 @@ Accept: application/json
 # WRAPPER #
 
 ### GET all todos
-GET http://{{host}}:{{wrapper_port}}/todos
+GET http://{{host}}/todos
 Accept: application/json

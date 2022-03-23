@@ -3,12 +3,17 @@ package main
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"wrapper/config"
+	"wrapper/http_client"
 	"wrapper/todos"
+	"wrapper/users"
 
 	"wrapper/handlers"
 )
 
 func main() {
+	appConfig := config.GetConfig()
+
 	e := echo.New()
 	e.HideBanner = true
 
@@ -18,9 +23,14 @@ func main() {
 
 	e.GET("/", handlers.Home)
 
-	h := &handlers.Handler{
-		TodosClient: todos.NewClient(),
-	}
+	h := handlers.NewHandler(
+		todos.NewServiceClient(
+			appConfig,
+			http_client.NewHttpClient(),
+		),
+		users.NewServiceClient(),
+	)
+
 	e.GET("/todos", h.GetAllTodos)
 
 	e.Logger.Fatal(e.Start(":8082"))
