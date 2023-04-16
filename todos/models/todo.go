@@ -1,13 +1,9 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Todo struct {
-	Description string `json:"description"`
-	UserID      uint   `json:"user_id"`
-	gorm.Model
+	ID          uint   `db:"id"          json:"id"`
+	Description string `db:"description" json:"description"`
+	UserID      uint   `db:"user_id"     json:"user_id"`
 }
 
 type GetTodoRequest struct {

@@ -21,14 +21,14 @@ func main() {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 
-	e.GET("/", handlers.Home)
-
 	h := handlers.NewHandler(
 		todos.NewServiceClient(
 			appConfig,
 			http_client.NewHttpClient(),
 		),
-		users.NewServiceClient(),
+		users.NewServiceClient(
+			appConfig,
+		),
 	)
 
 	e.GET("/todos", h.GetAllTodos)

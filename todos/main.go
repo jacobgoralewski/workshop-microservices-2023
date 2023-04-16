@@ -1,11 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
 	"todos/db"
 	"todos/handlers"
+)
+
+const (
+	port = 8081
 )
 
 func main() {
@@ -24,9 +29,6 @@ func main() {
 
 	e.GET("/todos", h.GetTodos)
 	e.GET("/todos/:id", h.GetTodo)
-	e.POST("/todos", h.CreateTodo)
-	e.PUT("/todos/:id", h.UpdateTodo)
-	e.DELETE("/todos/:id", h.DeleteTodo)
 
-	e.Logger.Fatal(e.Start(":8081"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }

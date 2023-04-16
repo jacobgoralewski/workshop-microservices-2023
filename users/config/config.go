@@ -22,9 +22,16 @@ func GetConfig() AppConfig {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 
+	viper.AutomaticEnv()
+	viper.BindEnv("db.port", "DB_PORT")
+	viper.BindEnv("db.host", "DB_HOST")
+	viper.BindEnv("db.name", "DB_NAME")
+	viper.BindEnv("db.username", "DB_USERNAME")
+	viper.BindEnv("db.password", "DB_PASSWORD")
+
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatal().Err(err).Msgf("unable to decode into struct, %v", err)
+		log.Error().Err(err).Msgf("unable to decode into struct, %v", err)
 	}
 
 	appConf := AppConfig{}
@@ -32,6 +39,7 @@ func GetConfig() AppConfig {
 	if err != nil {
 		log.Fatal().Err(err).Msgf("unable to decode into struct, %v", err)
 	}
+
 	log.Debug().Msgf("config: %+v", appConf)
 
 	return appConf

@@ -7,8 +7,9 @@ import (
 	"wrapper/models"
 )
 
+//go:generate mockgen -destination=../mocks/todos/todos.go -package=todos . Client
 type Client interface {
-	GetAll() (error, []models.Todo)
+	GetAll() ([]models.Todo, error)
 }
 
 type HttpClient struct {
@@ -23,12 +24,12 @@ func NewServiceClient(appConfig config.AppConfig, httpClient *http_client.HttpCl
 	}
 }
 
-func (sc HttpClient) GetAll() (error, []models.Todo) {
+func (sc HttpClient) GetAll() ([]models.Todo, error) {
 	var todos []models.Todo
 	err := sc.httpClient.Get(sc.appConfig.TodosServiceURL, &todos)
 	if err != nil {
-		return errors.Wrap(err, "failed to fetch todos"), []models.Todo{}
+		return []models.Todo{}, errors.Wrap(err, "failed to fetch todos")
 	}
 
-	return nil, todos
+	return todos, nil
 }

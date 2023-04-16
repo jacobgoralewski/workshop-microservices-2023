@@ -1,2 +1,4 @@
 todos_service_url: http://localhost:8081/todos
+users_service_url: :9000
+
 

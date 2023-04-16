@@ -1,49 +1,62 @@
 version: '3'
 
 services:
-  reverse-proxy:
-    image: traefik:v2.6
-    command: --handlers.insecure=true --providers.docker
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-# todo entrypoint postgres
 
   postgres:
-    image: postgres:10.5
+    image: postgres:latest
     restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.tcp.routers.postgres.rule=HostSNI(`*`)"
-      - "traefik.tcp.services.postgres.loadbalancer.server.port=5432"
-      - "traefik.tcp.routers.postgres.entrypoints=pg"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
     ports:
       - '5432:5432'
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-#      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
-#  whoami-a:
-#    # A container that exposes an API to show its IP address
-#    image: traefik/whoami
-#    labels:
-#      - traefik.http.routers.whoami-a.rule=Host(`localhost`)
-#      - traefik.http.routers.whoami-a.rule=PathPrefix(`/whoami/a/`)
-#      - traefik.http.routers.whoami-a.entrypoints=http
-#
-#  whoami-b:
-#    # A container that exposes an API to show its IP address
-#    image: traefik/whoami
-#    labels:
-#      - traefik.http.routers.whoami-b.rule=Host(`localhost`)
-#      - traefik.http.routers.whoami-b.rule=PathPrefix(`/whoami/b/`)
-#      - traefik.http.routers.whoami-b.entrypoints=http
+  todos:
+    image: todos
+    restart: always
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - '8081:8081'
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=postgres
+      - DB_NAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_USERNAME=postgres
+
+  users:
+    image: users
+    restart: always
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - '9000:9000'
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=postgres
+      - DB_NAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_USERNAME=postgres
+
+  wrapper:
+    image: wrapper
+    restart: always
+    depends_on:
+      - users
+      - todos
+    links:
+      - users
+      - todos
+    ports:
+      - '8082:8082'
+    environment:
+      - USERS_SERVICE_URL=users:9000
+      - TODOS_SERVICE_URL=http://todos:8081/todos

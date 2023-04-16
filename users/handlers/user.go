@@ -7,9 +7,8 @@ import (
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 
-	"contracts/users"
-
 	"users/models"
+	"users/proto"
 )
 
 type UsersServer struct {
